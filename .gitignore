@@ -1,8 +1,48 @@
-# Compiled class file
+### Class ###
 *.class
 
-# Log file
+### Gradle ###
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+!gradle/wrapper/gradle-wrapper.properties
+!gradle/wrapper/gradle-wrapper.jar
+
+### Logs ###
 *.log
+logs/
+log/
+
+### IntelliJ IDEA ###
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+### VS Code ###
+.vscode/
+
+### OS Files ###
+.DS_Store
+Thumbs.db
+
+### Spring Boot ###
+# Application-specific config overrides
+application-local.yaml
+application-local.properties
+
+# STS (Spring Tool Suite)
+.springBeans
+.apt_generated/
+.factorypath
+
+### Build tools & caches ###
+target/
+bin/
 
 # BlueJ files
 *.ctxt
