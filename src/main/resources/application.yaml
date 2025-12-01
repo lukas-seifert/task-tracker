@@ -1,3 +1,20 @@
 spring:
   application:
     name: task-tracker
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/tasktracker
+    username: tasktracker
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # validate/none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+server:
+  port: 8080
