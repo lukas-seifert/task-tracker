@@ -52,3 +52,34 @@ Press `Ctrl + C` in the terminal where `./gradlew bootRun` is running.
 ```bash
 ./gradlew test
 ```
+
+## API Overview
+
+### List tasks (with pagination & filters)
+
+`GET /api/tasks`
+
+Query parameters:
+- `page` (default: 0)
+- `size` (default: 10)
+- `sort` (e.g. `sort=dueDate,asc`)
+- `status` (optional, e.g. `OPEN`, `IN_PROGRESS`, `DONE`)
+- `priority` (optional, e.g. `LOW`, `MEDIUM`, `HIGH`)
+
+### Create a task
+`POST /api/tasks`
+
+### Get a task by id
+`GET /api/tasks/{id}`
+
+### Update a task
+`PUT /api/tasks/{id}`
+
+### Delete a task
+`DELETE /api/tasks/{id}`
+
+## API Documentation
+
+Once the application is running, the OpenAPI/Swagger UI is available at:
+
+http://localhost:8080/swagger-ui/index.html
