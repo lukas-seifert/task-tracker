@@ -19,15 +19,19 @@ repositories {
 }
 
 dependencies {
-    // Web + REST
+    // Web (Controllers, JSON, REST APIs)
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // JPA + Hibernate
+    // JPA / Hibernate
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // Bean Validation (z. B. @NotNull, @Size ...)
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // Swagger / OpenAPI UI (API docs at /swagger-ui/index.html)
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+    // Enables automatic application restarts during development
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    // PostgreSQL
+    // PostgreSQL JDBC Driver
     runtimeOnly 'org.postgresql:postgresql'
-    // Tests
+    // Testing (JUnit, Mockito, MockMvc, AssertJ)
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
