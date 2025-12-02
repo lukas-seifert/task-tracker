@@ -33,7 +33,20 @@ Run the Spring Boot application locally:
 ./gradlew bootRun
 ```
 
-The API will be available at: http://localhost:8080
+The API will be available at: http://localhost:8080/api/tasks
+
+## Stopping the application
+
+### Stop PostgreSQL (Docker)
+
+```bash
+docker compose down
+```
+This stops and removes the database container.
+
+### Stop the Spring Boot application
+
+Press `Ctrl + C` in the terminal where `./gradlew bootRun` is running.
 
 ## Running Tests
 ```bash
