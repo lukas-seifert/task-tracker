@@ -8,9 +8,10 @@ import com.example.task_tracker.task.model.Task;
 import com.example.task_tracker.task.model.TaskPriority;
 import com.example.task_tracker.task.model.TaskStatus;
 import com.example.task_tracker.task.repository.TaskRepository;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -36,18 +37,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskResponse> getAllTasks() {
-        return taskRepository.findAll()
-                .stream()
-                .map(this::mapToResponse)
-                .toList();
-    }
-
-    @Override
     public TaskResponse getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new TaskNotFoundException(id));
         return mapToResponse(task);
+    }
+
+    @Override
+    public Page<TaskResponse> getTasks(Pageable pageable, TaskStatus status, TaskPriority priority) {
+        Page<Task> page;
+
+        if (status != null && priority != null) {
+            page = taskRepository.findAllByStatusAndPriority(status, priority, pageable);
+        } else if (status != null) {
+            page = taskRepository.findAllByStatus(status, pageable);
+        } else if (priority != null) {
+            page = taskRepository.findAllByPriority(priority, pageable);
+        } else {
+            page = taskRepository.findAll(pageable);
+        }
+        return page.map(this::mapToResponse);
     }
 
     @Override
@@ -89,4 +98,5 @@ public class TaskServiceImpl implements TaskService {
                 task.getUpdatedAt()
         );
     }
+
 }
