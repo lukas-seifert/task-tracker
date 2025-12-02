@@ -1,4 +1,9 @@
 package com.example.task_tracker.task.exception;
 
-public class TaskNotFoundException {
+public class TaskNotFoundException extends RuntimeException {
+
+    public TaskNotFoundException(Long id) {
+        super("Task with id " + id + " not found");
+    }
+    
 }
