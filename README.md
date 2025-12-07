@@ -1,39 +1,49 @@
 # Task Tracker
 
-A backend service for managing tasks.  
-This project demonstrates clean REST API design, persistent data storage, and containerized local development.
+A backend service for managing tasks, including a small static frontend.
+This project demonstrates clean REST API design, persistent data storage, containerized local development, and a minimal UI built with JavaScript.
 
 ## Tech Stack
-- Java 21 / Spring Boot
+- Java 21 · Spring Boot 3
 - Spring Web · Spring Data JPA · PostgreSQL
 - Docker Compose for local development
 - Gradle
-- JUnit & Mockito for testing
+- JUnit & Mockito
+- Simple HTML/JS frontend
 
 ## Purpose
 This project serves as a compact and extensible backend example, focusing on:
-- Domain modeling and persistence
-- Clear separation of controller/service/repository layers
-- Practical local deployment using Docker
-- REST best practices and DTO-based API design
+- REST API design with DTOs and validation
+- Domain modeling and persistence with Spring Data JPA
+- Clear controller/service/repository architecture
+- Practical deployment setup using Docker 
+- Optional UI for interacting with the API
 
 ## Running Locally
 
 ### Start PostgreSQL using Docker
 
-Make sure your `docker-compose.yml` is in the project root, then start the database:
+Ensure sure your `docker-compose.yml` is in the project root, then run:
 ```bash
 docker compose up -d
 ```
+This starts a PostgreSQL instance configured for the application.
 
-### Start the application
+### Start the Spring Boot application
 
-Run the Spring Boot application locally:
+Run the backend locally:
 ```bash
 ./gradlew bootRun
 ```
 
-The API will be available at: http://localhost:8080/api/tasks
+### Application URLs
+
+Once running:
+- Frontend: http://localhost:8080/
+- API root: http://localhost:8080/api/tasks
+- Swagger UI: http://localhost:8080/swagger-ui/index.html
+
+The frontend is served from `src/main/resources/static` and interacts directly with the REST API.
 
 ## Stopping the application
 
@@ -42,7 +52,6 @@ The API will be available at: http://localhost:8080/api/tasks
 ```bash
 docker compose down
 ```
-This stops and removes the database container.
 
 ### Stop the Spring Boot application
 
@@ -77,9 +86,3 @@ Query parameters:
 
 ### Delete a task
 `DELETE /api/tasks/{id}`
-
-## API Documentation
-
-Once the application is running, the OpenAPI/Swagger UI is available at:
-
-http://localhost:8080/swagger-ui/index.html
