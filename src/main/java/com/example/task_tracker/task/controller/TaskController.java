@@ -24,10 +24,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 /**
- * Controller class for REST endpoints.
+ * REST controller exposing CRUD operations for tasks.
+ * Handles request validation, pagination, and filtering and delegates
+ * business logic to {@link TaskService}.
  */
 @RestController
 @RequestMapping("/api/tasks")
@@ -35,16 +35,35 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    /**
+     * Creates a new {@code TaskController} with the required service dependency.
+     *
+     * @param taskService the service handling task operations
+     */
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
+    /**
+     * Creates a new task.
+     *
+     * @param request the request payload containing task fields
+     * @return the created task wrapped in a {@link ResponseEntity}
+     */
     @PostMapping
     public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody TaskCreateRequest request) {
         TaskResponse created = taskService.createTask(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    /**
+     * Retrieves a paginated list of tasks with optional filtering by status and priority.
+     *
+     * @param pageable pagination and sorting information
+     * @param status optional filter for task status
+     * @param priority optional filter for task priority
+     * @return a {@link Page} of matching task responses
+     */
     @GetMapping
     public Page<TaskResponse> getTasks(
             @PageableDefault(size = 10, sort = "createdAt") Pageable pageable,
@@ -54,17 +73,36 @@ public class TaskController {
         return taskService.getTasks(pageable, status, priority);
     }
 
+    /**
+     * Retrieves a single task by its ID.
+     *
+     * @param id the task identifier
+     * @return the matching task response
+     */
     @GetMapping("/{id}")
     public TaskResponse getTaskById(@PathVariable Long id) {
         return taskService.getTaskById(id);
     }
 
+    /**
+     * Updates an existing task by its ID.
+     *
+     * @param id the task identifier
+     * @param request the updated task fields
+     * @return the updated task response
+     */
     @PutMapping("/{id}")
     public TaskResponse updateTask(@PathVariable Long id,
                                    @Valid @RequestBody TaskUpdateRequest request) {
         return taskService.updateTask(id, request);
     }
 
+    /**
+     * Deletes a task by its ID.
+     *
+     * @param id the task identifier
+     * @return an empty 204 No Content response
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);

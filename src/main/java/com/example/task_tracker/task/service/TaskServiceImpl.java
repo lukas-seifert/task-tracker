@@ -13,11 +13,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+/**
+ * Service implementation of {@link TaskService} providing the business logic for creating, updating,
+ * retrieving, and deleting tasks. Delegates persistence operations to {@link TaskRepository}.
+ */
 @Service
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
+    /**
+     * Creates a new {@code TaskServiceImpl} with the required repository dependency.
+     *
+     * @param taskRepository the repository used for task persistence
+     */
     public TaskServiceImpl(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }

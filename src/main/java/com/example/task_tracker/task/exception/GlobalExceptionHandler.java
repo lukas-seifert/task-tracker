@@ -13,9 +13,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Global exception handler for the application.
+ * Converts thrown exceptions into consistent API error responses.
+ */
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    /**
+     * Handles cases where a requested task cannot be found.
+     *
+     * @param ex the thrown {@link TaskNotFoundException}
+     * @param request the originating HTTP request
+     * @return a 404 Not Found error response
+     */
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTaskNotFound(
             TaskNotFoundException ex,
@@ -30,6 +41,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
+    /**
+     * Handles validation errors triggered by invalid request bodies.
+     *
+     * @param ex the thrown {@link MethodArgumentNotValidException}
+     * @param request the originating HTTP request
+     * @return a 400 Bad Request response containing field-specific messages
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException ex,
@@ -38,8 +56,9 @@ public class GlobalExceptionHandler {
         Map<String, String> fieldErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .collect(Collectors.toMap(FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage,
-                        (msg1, msg2) -> msg1
+                .collect(Collectors.toMap(FieldError::getField,
+                        DefaultMessageSourceResolvable::getDefaultMessage,
+                        (msg1, msg2) -> msg1 // keep first if duplicate keys appear
                 ));
 
         ErrorResponse body = new ErrorResponse(
@@ -52,6 +71,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    /**
+     * Handles validation errors raised from constraint-annotated method parameters.
+     *
+     * @param ex the thrown {@link ConstraintViolationException}
+     * @param request the originating HTTP request
+     * @return a 400 Bad Request response
+     */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(
             ConstraintViolationException ex,
@@ -66,6 +92,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(body);
     }
 
+    /**
+     * Fallback handler for any unexpected, uncaught exceptions.
+     *
+     * @param request the originating HTTP request
+     * @return a 500 Internal Server Error response
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGeneric(
             HttpServletRequest request

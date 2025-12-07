@@ -7,7 +7,11 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * Record for GET operation.
+ * Response model for returning task data to API clients.
+ * Used for GET operations such as retrieving a single task or listing tasks.
+ * <p>
+ * This record provides a read-only view of a task, including metadata such
+ * as creation and update timestamps.
  */
 public record TaskResponse(
         Long id,
