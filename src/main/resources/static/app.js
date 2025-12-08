@@ -1,6 +1,17 @@
 const API_BASE = '/api/tasks';
 let editingTaskId = null;
 
+function collapseAllDescriptions() {
+    const expandedCells = document.querySelectorAll('.description-cell.expanded');
+    expandedCells.forEach(cell => {
+        cell.classList.remove('expanded');
+        const span = cell.querySelector('.description-text');
+        if (span && cell.dataset.short !== undefined) {
+            span.textContent = cell.dataset.short;
+        }
+    });
+}
+
 async function loadTasks() {
     const res = await fetch(API_BASE);
     if (!res.ok) {
@@ -14,28 +25,29 @@ async function loadTasks() {
 
     const tbody = document.querySelector('#tasks-table tbody');
     tbody.innerHTML = '';
+    collapseAllDescriptions();
 
     tasks.forEach(task => {
         const tr = document.createElement('tr');
 
         const status = task.status ?? 'OPEN';
         const priority = task.priority ?? 'MEDIUM';
-        const statusClass = status.toLowerCase();        // e.g. IN_PROGRESS -> in_progress
-        const priorityClass = priority.toLowerCase();    // e.g. HIGH -> high
+        const statusClass = status.toLowerCase();
+        const priorityClass = priority.toLowerCase();
+
+        const statusBadge =
+            `<span class="badge badge-status-${statusClass}">${status}</span>`;
+        const priorityBadge =
+            `<span class="badge badge-priority-${priorityClass}">${priority}</span>`;
 
         tr.innerHTML = `
             <td>${task.id}</td>
             <td>${task.title}</td>
-            <td>
-                <span class="badge badge-status-${statusClass}">
-                    ${status}
-                </span>
+            <td class="description-cell">
+                <span class="description-text"></span>
             </td>
-            <td>
-                <span class="badge badge-priority-${priorityClass}">
-                    ${priority}
-                </span>
-            </td>
+            <td>${statusBadge}</td>
+            <td>${priorityBadge}</td>
             <td>${task.dueDate ?? ''}</td>
             <td class="actions-cell">
                 <button data-id="${task.id}" class="btn btn-secondary btn-sm edit-btn">Edit</button>
@@ -43,11 +55,34 @@ async function loadTasks() {
             </td>
         `;
 
-        tbody.appendChild(tr);
+        const tbodyRef = document.querySelector('#tasks-table tbody');
+        tbodyRef.appendChild(tr);
 
+        // Description configuration
+        const descCell = tr.querySelector('.description-cell');
+        const descSpan = descCell.querySelector('.description-text');
+        const full = task.description || '';
+        const short = full.length > 60 ? full.substring(0, 60) + '…' : full;
+
+        descCell.dataset.full = full;
+        descCell.dataset.short = short;
+        descSpan.textContent = short;
+
+        descCell.addEventListener('click', (event) => {
+            event.stopPropagation();
+            const isExpanded = descCell.classList.contains('expanded');
+            collapseAllDescriptions();
+            if (!isExpanded) {
+                descCell.classList.add('expanded');
+                descSpan.textContent = descCell.dataset.full;
+            }
+        });
+
+        // Edit-Button
         const editBtn = tr.querySelector('.edit-btn');
         editBtn.addEventListener('click', () => startEditTask(task));
 
+        // Delete-Button
         const deleteBtn = tr.querySelector('.delete-btn');
         deleteBtn.addEventListener('click', async () => {
             await deleteTask(task.id);
@@ -145,6 +180,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const cancelBtn = document.getElementById('cancel-edit-btn');
     cancelBtn.addEventListener('click', resetForm);
+
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.description-cell')) {
+            collapseAllDescriptions();
+        }
+    });
 
     loadTasks();
 });
