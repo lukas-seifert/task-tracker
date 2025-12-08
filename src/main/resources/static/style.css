@@ -161,7 +161,7 @@ textarea {
 }
 
 .btn-primary {
-    background: #3a84f1;;
+    background: #3a84f1;
     color: white;
     box-shadow: 0 6px 15px rgba(79, 70, 229, 0.35);
 }
@@ -284,4 +284,18 @@ tbody tr:hover {
 .badge-priority-high {
     background: var(--danger-soft);
     color: var(--danger);
+}
+
+#tasks-card {
+    min-height: 335px;
+}
+
+#tasks-card .table-wrapper {
+    max-height: 550px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+
+#tasks-table {
+    min-width: 750px;
 }
