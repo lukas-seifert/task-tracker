@@ -86,3 +86,19 @@ Query parameters:
 
 ### Delete a task
 `DELETE /api/tasks/{id}`
+
+## Code Style & Formatting
+
+This project enforces consistent code formatting using the Spotless Gradle plugin.
+To automatically format the project, run:
+
+```bash
+./gradlew spotlessApply
+```
+
+To verify formatting:
+```bash
+./gradlew spotlessCheck
+```
+
+The formatting rules are based on the Eclipse formatter profile in `config/format.xml`.
