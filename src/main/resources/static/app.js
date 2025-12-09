@@ -12,16 +12,38 @@ function collapseAllDescriptions() {
     });
 }
 
-async function loadTasks() {
-    const res = await fetch(API_BASE);
+/**
+ * Loads tasks from the API with current filter and sorting settings
+ * and renders them into the table body.
+ */
+async function loadTasks(page = 0) {
+    // Read filter and sort values from UI (if present)
+    const statusFilter = document.getElementById('filter-status')?.value || '';
+    const priorityFilter = document.getElementById('filter-priority')?.value || '';
+    const sortBy = document.getElementById('sort-by')?.value || 'createdAt';
+    const sortDir = document.getElementById('sort-dir')?.value || 'desc';
+
+    const params = new URLSearchParams();
+    params.append('page', page.toString());
+    params.append('size', '50');
+    params.append('sort', `${sortBy},${sortDir}`);
+
+    if (statusFilter) {
+        params.append('status', statusFilter);
+    }
+    if (priorityFilter) {
+        params.append('priority', priorityFilter);
+    }
+
+    const res = await fetch(`${API_BASE}?${params.toString()}`);
     if (!res.ok) {
         console.error('Failed to load tasks', res.status);
         alert('Failed to load tasks');
         return;
     }
 
-    const page = await res.json();
-    const tasks = page.content ?? page; // works with or without pagination
+    const pageData = await res.json();
+    const tasks = pageData.content ?? pageData;
 
     const tbody = document.querySelector('#tasks-table tbody');
     tbody.innerHTML = '';
@@ -175,17 +197,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const refreshBtn = document.getElementById('refresh-btn');
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', loadTasks);
+        refreshBtn.addEventListener('click', () => loadTasks());
     }
 
     const cancelBtn = document.getElementById('cancel-edit-btn');
     cancelBtn.addEventListener('click', resetForm);
 
+    // Collapse descriptions when clicking outside
     document.addEventListener('click', (event) => {
         if (!event.target.closest('.description-cell')) {
             collapseAllDescriptions();
         }
     });
 
+    // Filter & Sort Event-Handler
+    const statusFilter = document.getElementById('filter-status');
+    const priorityFilter = document.getElementById('filter-priority');
+    const sortBySelect = document.getElementById('sort-by');
+    const sortDirSelect = document.getElementById('sort-dir');
+
+    if (statusFilter) {
+        statusFilter.addEventListener('change', () => loadTasks());
+    }
+    if (priorityFilter) {
+        priorityFilter.addEventListener('change', () => loadTasks());
+    }
+    if (sortBySelect) {
+        sortBySelect.addEventListener('change', () => loadTasks());
+    }
+    if (sortDirSelect) {
+        sortDirSelect.addEventListener('change', () => loadTasks());
+    }
+
+    // Initial load
     loadTasks();
 });

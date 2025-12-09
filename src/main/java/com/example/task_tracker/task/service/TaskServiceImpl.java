@@ -95,6 +95,12 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteById(id);
     }
 
+    /**
+     * Maps a {@link Task} entity to its corresponding {@link TaskResponse} DTO.
+     *
+     * @param task the task entity to convert
+     * @return the mapped response DTO
+     */
     private TaskResponse mapToResponse(Task task) {
         return new TaskResponse(
                 task.getId(),

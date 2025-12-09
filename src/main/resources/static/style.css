@@ -244,8 +244,8 @@ tbody tr:hover {
 
 /* Edit-Mode */
 .edit-mode {
-    border: 2px solid #f4c542;
-    background-color: #fff9e6;
+    border: 2px solid #fbbf24;
+    box-shadow: 0 0 0 1px rgba(250, 204, 21, 0.4);
     transition: 0.2s ease-in-out;
 }
 
@@ -295,7 +295,7 @@ tbody tr:hover {
 }
 
 #tasks-card .table-wrapper {
-    max-height: 550px;
+    max-height: 503px;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -326,4 +326,25 @@ tbody tr:hover {
     -webkit-line-clamp: unset;
     max-height: none;
     color: var(--text);
+}
+
+/* Filters */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+}
+
+.filters-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.filters select {
+    min-width: 120px;
+    font-size: 0.85rem;
 }

@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,6 +59,9 @@ public class TaskController {
 
     /**
      * Retrieves a paginated list of tasks with optional filtering by status and priority.
+     * <p>
+     * Sorting can be customized via the {@code sort} query parameter.
+     * By default, tasks are sorted by {@code createdAt} in ascending order.
      *
      * @param pageable pagination and sorting information
      * @param status optional filter for task status
@@ -66,7 +70,8 @@ public class TaskController {
      */
     @GetMapping
     public Page<TaskResponse> getTasks(
-            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable,
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.ASC)
+            Pageable pageable,
             @RequestParam(required = false) TaskStatus status,
             @RequestParam(required = false) TaskPriority priority
     ) {

@@ -34,10 +34,13 @@ public interface TaskService {
 
     /**
      * Returns a paginated list of tasks with optional filtering.
+     * <p>
+     * The underlying {@link Pageable} parameter supports pagination and sorting.
+     * Sorting can be configured by passing a {@code sort} query parameter.
      *
      * @param pageable pagination and sorting information
-     * @param status optional filter for task status
-     * @param priority optional filter for task priority
+     * @param status optional filter for task status (may be {@code null})
+     * @param priority optional filter for task priority (may be {@code null})
      * @return a page of task responses
      */
     Page<TaskResponse> getTasks(Pageable pageable, TaskStatus status, TaskPriority priority);
