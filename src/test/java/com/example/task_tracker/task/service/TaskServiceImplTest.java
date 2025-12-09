@@ -1,8 +1,12 @@
 package com.example.task_tracker.task.service;
 
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
+
 import com.example.task_tracker.task.dto.TaskCreateRequest;
-import com.example.task_tracker.task.dto.TaskUpdateRequest;
 import com.example.task_tracker.task.dto.TaskResponse;
+import com.example.task_tracker.task.dto.TaskUpdateRequest;
 import com.example.task_tracker.task.exception.TaskNotFoundException;
 import com.example.task_tracker.task.model.Task;
 import com.example.task_tracker.task.model.TaskPriority;
@@ -14,15 +18,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -56,7 +55,8 @@ class TaskServiceImplTest {
     void testCreateTask() {
         // given
         TaskCreateRequest request = createTaskCreateRequest();
-        when(taskRepository.save(any(Task.class))).thenAnswer(invocation -> invocation.<Task>getArgument(0));
+        when(taskRepository.save(any(Task.class)))
+            .thenAnswer(invocation -> invocation.<Task>getArgument(0));
 
         // when
         TaskResponse response = taskService.createTask(request);
@@ -95,13 +95,7 @@ class TaskServiceImplTest {
     @Test
     void testGetTaskByIdWhenFound() {
         // given
-        Task task = new Task(
-                "Test Task",
-                "Desc",
-                TaskStatus.OPEN,
-                TaskPriority.MEDIUM,
-                null
-        );
+        Task task = new Task("Test Task", "Desc", TaskStatus.OPEN, TaskPriority.MEDIUM, null);
         when(taskRepository.findById(1L)).thenReturn(Optional.of(task));
 
         // when
@@ -119,8 +113,7 @@ class TaskServiceImplTest {
 
         // when/then
         assertThatThrownBy(() -> taskService.getTaskById(42L))
-                .isInstanceOf(TaskNotFoundException.class)
-                .hasMessageContaining("42");
+            .isInstanceOf(TaskNotFoundException.class).hasMessageContaining("42");
     }
 
     @Test
@@ -134,7 +127,7 @@ class TaskServiceImplTest {
 
         // when/then
         assertThatThrownBy(() -> taskService.updateTask(99L, request))
-                .isInstanceOf(TaskNotFoundException.class);
+            .isInstanceOf(TaskNotFoundException.class);
     }
 
     @Test
@@ -156,7 +149,7 @@ class TaskServiceImplTest {
 
         // when/then
         assertThatThrownBy(() -> taskService.deleteTask(1L))
-                .isInstanceOf(TaskNotFoundException.class);
+            .isInstanceOf(TaskNotFoundException.class);
     }
 
 }

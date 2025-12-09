@@ -5,7 +5,5 @@ package com.example.task_tracker.task.model;
  * Indicates the relative importance or urgency of the task.
  */
 public enum TaskPriority {
-    LOW,
-    MEDIUM,
-    HIGH
+    LOW, MEDIUM, HIGH
 }

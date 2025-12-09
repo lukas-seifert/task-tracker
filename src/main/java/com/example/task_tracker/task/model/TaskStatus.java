@@ -5,7 +5,5 @@ package com.example.task_tracker.task.model;
  * Used to track progress from creation to completion.
  */
 public enum TaskStatus {
-    OPEN,
-    IN_PROGRESS,
-    DONE
+    OPEN, IN_PROGRESS, DONE
 }

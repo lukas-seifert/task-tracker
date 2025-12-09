@@ -24,7 +24,9 @@ public class ErrorResponse {
      * @param path the request path where the error occurred
      * @param validationErrors optional field-level validation errors (ca be {@code null})
      */
-    public ErrorResponse(int status, String error, String path, Map<String, String> validationErrors) {
+    public ErrorResponse(
+        int status, String error, String path, Map<String, String> validationErrors)
+    {
         this.timestamp = LocalDateTime.now();
         this.status = status;
         this.error = error;

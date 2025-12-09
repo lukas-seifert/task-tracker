@@ -40,6 +40,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
      * @param pageable pagination and sorting information
      * @return a page of matching tasks
      */
-    Page<Task> findAllByStatusAndPriority(TaskStatus status, TaskPriority priority, Pageable pageable);
+    Page<Task> findAllByStatusAndPriority(
+        TaskStatus status, TaskPriority priority, Pageable pageable);
 
 }

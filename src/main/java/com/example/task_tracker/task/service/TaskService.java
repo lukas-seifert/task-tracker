@@ -5,7 +5,6 @@ import com.example.task_tracker.task.dto.TaskResponse;
 import com.example.task_tracker.task.dto.TaskUpdateRequest;
 import com.example.task_tracker.task.model.TaskPriority;
 import com.example.task_tracker.task.model.TaskStatus;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

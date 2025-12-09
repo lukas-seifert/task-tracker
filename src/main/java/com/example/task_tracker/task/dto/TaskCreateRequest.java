@@ -1,11 +1,12 @@
 package com.example.task_tracker.task.dto;
 
+import java.time.LocalDate;
+
 import com.example.task_tracker.task.model.TaskPriority;
 import com.example.task_tracker.task.model.TaskStatus;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
-import java.time.LocalDate;
 
 /**
  * Data transfer object used for creating a new task.

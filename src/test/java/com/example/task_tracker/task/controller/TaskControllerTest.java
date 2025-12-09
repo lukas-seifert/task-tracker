@@ -1,5 +1,9 @@
 package com.example.task_tracker.task.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
 import com.example.task_tracker.task.dto.TaskCreateRequest;
 import com.example.task_tracker.task.dto.TaskResponse;
 import com.example.task_tracker.task.dto.TaskUpdateRequest;
@@ -20,10 +24,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
@@ -51,15 +51,8 @@ class TaskControllerTest {
     void testCreateTask() throws Exception {
         // given
         TaskResponse response = new TaskResponse(
-                1L,
-                "New Task",
-                "Desc",
-                TaskStatus.OPEN,
-                TaskPriority.MEDIUM,
-                LocalDate.of(2025, 1, 1),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+            1L, "New Task", "Desc", TaskStatus.OPEN, TaskPriority.MEDIUM, LocalDate.of(2025, 1, 1),
+            LocalDateTime.now(), LocalDateTime.now());
 
         Mockito.when(taskService.createTask(any(TaskCreateRequest.class))).thenReturn(response);
 
@@ -70,60 +63,52 @@ class TaskControllerTest {
         request.setPriority(TaskPriority.MEDIUM);
 
         // when/then
-        mockMvc.perform(post("/api/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.title", is("New Task")));
+        mockMvc
+            .perform(
+                post("/api/tasks").contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated()).andExpect(jsonPath("$.id", is(1)))
+            .andExpect(jsonPath("$.title", is("New Task")));
     }
 
     @Test
     void testCreateTaskValidationError() throws Exception {
         // given
         String invalidJson = """
-        {
-          "description": "Task without title",
-          "status": "OPEN",
-          "priority": "MEDIUM"
-        }
-        """;
+            {
+              "description": "Task without title",
+              "status": "OPEN",
+              "priority": "MEDIUM"
+            }
+            """;
 
         // when/then
-        mockMvc.perform(post("/api/tasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(invalidJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Validation failed"))
-                .andExpect(jsonPath("$.validationErrors.title").exists());
+        mockMvc
+            .perform(
+                post("/api/tasks").contentType(MediaType.APPLICATION_JSON).content(invalidJson))
+            .andExpect(status().isBadRequest()).andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.error").value("Validation failed"))
+            .andExpect(jsonPath("$.validationErrors.title").exists());
     }
 
     @Test
     void testGetTasks() throws Exception {
         // given
         TaskResponse t1 = new TaskResponse(
-                1L, "T1", "D1",
-                TaskStatus.OPEN, TaskPriority.LOW,
-                null, LocalDateTime.now(), LocalDateTime.now()
-        );
+            1L, "T1", "D1", TaskStatus.OPEN, TaskPriority.LOW, null, LocalDateTime.now(),
+            LocalDateTime.now());
         TaskResponse t2 = new TaskResponse(
-                2L, "T2", "D2",
-                TaskStatus.DONE, TaskPriority.HIGH,
-                null, LocalDateTime.now(), LocalDateTime.now()
-        );
+            2L, "T2", "D2", TaskStatus.DONE, TaskPriority.HIGH, null, LocalDateTime.now(),
+            LocalDateTime.now());
 
         Page<TaskResponse> page = new PageImpl<>(List.of(t1, t2));
-        Mockito.when(taskService.getTasks(any(Pageable.class), any(), any()))
-                .thenReturn(page);
+        Mockito.when(taskService.getTasks(any(Pageable.class), any(), any())).thenReturn(page);
 
         // when/then
-        mockMvc.perform(get("/api/tasks")
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content", hasSize(2)))
-                .andExpect(jsonPath("$.content[0].title", is("T1")))
-                .andExpect(jsonPath("$.content[1].status", is("DONE")));
+        mockMvc.perform(get("/api/tasks").accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.content", hasSize(2)))
+            .andExpect(jsonPath("$.content[0].title", is("T1")))
+            .andExpect(jsonPath("$.content[1].status", is("DONE")));
     }
 
     @Test
@@ -131,32 +116,24 @@ class TaskControllerTest {
         // given
         long missingId = 42L;
         Mockito.when(taskService.getTaskById(missingId))
-                .thenThrow(new TaskNotFoundException(missingId));
+            .thenThrow(new TaskNotFoundException(missingId));
 
         // when/then
-        mockMvc.perform(get("/api/tasks/{id}", missingId))
-                .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
-                .andExpect(jsonPath("$.error").value("Task with id 42 not found"))
-                .andExpect(jsonPath("$.path").value("/api/tasks/42"));
+        mockMvc.perform(get("/api/tasks/{id}", missingId)).andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.error").value("Task with id 42 not found"))
+            .andExpect(jsonPath("$.path").value("/api/tasks/42"));
     }
 
     @Test
     void testUpdateTask() throws Exception {
         // given
         TaskResponse updated = new TaskResponse(
-                1L,
-                "Updated",
-                "Updated desc",
-                TaskStatus.IN_PROGRESS,
-                TaskPriority.HIGH,
-                null,
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+            1L, "Updated", "Updated desc", TaskStatus.IN_PROGRESS, TaskPriority.HIGH, null,
+            LocalDateTime.now(), LocalDateTime.now());
 
         Mockito.when(taskService.updateTask(eq(1L), any(TaskUpdateRequest.class)))
-                .thenReturn(updated);
+            .thenReturn(updated);
 
         TaskUpdateRequest request = new TaskUpdateRequest();
         request.setTitle("Updated");
@@ -165,19 +142,18 @@ class TaskControllerTest {
         request.setPriority(TaskPriority.HIGH);
 
         // when/then
-        mockMvc.perform(put("/api/tasks/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title", is("Updated")))
-                .andExpect(jsonPath("$.status", is("IN_PROGRESS")));
+        mockMvc
+            .perform(
+                put("/api/tasks/1").contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.title", is("Updated")))
+            .andExpect(jsonPath("$.status", is("IN_PROGRESS")));
     }
 
     @Test
     void testDeleteTask() throws Exception {
         // when/then
-        mockMvc.perform(delete("/api/tasks/1"))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/tasks/1")).andExpect(status().isNoContent());
     }
 
 }

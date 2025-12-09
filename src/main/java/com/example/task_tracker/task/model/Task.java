@@ -1,5 +1,8 @@
 package com.example.task_tracker.task.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,9 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 /**
  * JPA entity representing a task in the system.
@@ -52,8 +52,7 @@ public class Task {
     /**
      * Protected no-args constructor required by JPA.
      */
-    protected Task() {
-    }
+    protected Task() {}
 
     /**
      * Creates a new {@code Task} instance with the given fields.
@@ -64,11 +63,10 @@ public class Task {
      * @param priority the task priority level
      * @param dueDate optional due date
      */
-    public Task(String title,
-                String description,
-                TaskStatus status,
-                TaskPriority priority,
-                LocalDate dueDate) {
+    public Task(
+        String title, String description, TaskStatus status, TaskPriority priority,
+        LocalDate dueDate)
+    {
         this.title = title;
         this.description = description;
         this.status = status;

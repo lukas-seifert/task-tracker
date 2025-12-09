@@ -3,12 +3,9 @@ package com.example.task_tracker.task.controller;
 import com.example.task_tracker.task.dto.TaskCreateRequest;
 import com.example.task_tracker.task.dto.TaskResponse;
 import com.example.task_tracker.task.dto.TaskUpdateRequest;
-import com.example.task_tracker.task.model.TaskStatus;
 import com.example.task_tracker.task.model.TaskPriority;
+import com.example.task_tracker.task.model.TaskStatus;
 import com.example.task_tracker.task.service.TaskService;
-
-import jakarta.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -24,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 /**
  * REST controller exposing CRUD operations for tasks.
@@ -70,11 +69,11 @@ public class TaskController {
      */
     @GetMapping
     public Page<TaskResponse> getTasks(
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.ASC)
-            Pageable pageable,
-            @RequestParam(required = false) TaskStatus status,
-            @RequestParam(required = false) TaskPriority priority
-    ) {
+        @PageableDefault(
+            size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
+        @RequestParam(required = false) TaskStatus status,
+        @RequestParam(required = false) TaskPriority priority)
+    {
         return taskService.getTasks(pageable, status, priority);
     }
 
@@ -97,8 +96,9 @@ public class TaskController {
      * @return the updated task response
      */
     @PutMapping("/{id}")
-    public TaskResponse updateTask(@PathVariable Long id,
-                                   @Valid @RequestBody TaskUpdateRequest request) {
+    public TaskResponse updateTask(
+        @PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request)
+    {
         return taskService.updateTask(id, request);
     }
 

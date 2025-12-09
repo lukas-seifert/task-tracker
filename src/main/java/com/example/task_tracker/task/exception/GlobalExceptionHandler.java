@@ -1,7 +1,8 @@
 package com.example.task_tracker.task.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.ConstraintViolationException;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.util.Map;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 
 /**
  * Global exception handler for the application.
@@ -29,15 +30,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTaskNotFound(
-            TaskNotFoundException ex,
-            HttpServletRequest request
-    ) {
+        TaskNotFoundException ex, HttpServletRequest request)
+    {
         ErrorResponse body = new ErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                null
-        );
+            HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI(), null);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
@@ -50,23 +46,17 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
-            MethodArgumentNotValidException ex,
-            HttpServletRequest request
-    ) {
-        Map<String, String> fieldErrors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .collect(Collectors.toMap(FieldError::getField,
-                        DefaultMessageSourceResolvable::getDefaultMessage,
-                        (msg1, msg2) -> msg1 // keep first if duplicate keys appear
-                ));
+        MethodArgumentNotValidException ex, HttpServletRequest request)
+    {
+        Map<String, String> fieldErrors = ex.getBindingResult().getFieldErrors().stream().collect(
+            Collectors.toMap(
+                FieldError::getField, DefaultMessageSourceResolvable::getDefaultMessage,
+                (msg1, msg2) -> msg1 // keep first if duplicate keys appear
+            ));
 
         ErrorResponse body = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation failed",
-                request.getRequestURI(),
-                fieldErrors
-        );
+            HttpStatus.BAD_REQUEST.value(), "Validation failed", request.getRequestURI(),
+            fieldErrors);
 
         return ResponseEntity.badRequest().body(body);
     }
@@ -80,15 +70,10 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraintViolation(
-            ConstraintViolationException ex,
-            HttpServletRequest request
-    ) {
+        ConstraintViolationException ex, HttpServletRequest request)
+    {
         ErrorResponse body = new ErrorResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                ex.getMessage(),
-                request.getRequestURI(),
-                null
-        );
+            HttpStatus.BAD_REQUEST.value(), ex.getMessage(), request.getRequestURI(), null);
         return ResponseEntity.badRequest().body(body);
     }
 
@@ -99,15 +84,10 @@ public class GlobalExceptionHandler {
      * @return a 500 Internal Server Error response
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGeneric(
-            HttpServletRequest request
-    ) {
+    public ResponseEntity<ErrorResponse> handleGeneric(HttpServletRequest request) {
         ErrorResponse body = new ErrorResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Unexpected error",
-                request.getRequestURI(),
-                null
-        );
+            HttpStatus.INTERNAL_SERVER_ERROR.value(), "Unexpected error", request.getRequestURI(),
+            null);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(body);
     }
 
