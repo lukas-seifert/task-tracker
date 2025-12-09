@@ -3,13 +3,18 @@ package com.example.task_tracker.task.model;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.task_tracker.project.model.Project;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -42,6 +47,14 @@ public class Task {
     private TaskPriority priority = TaskPriority.MEDIUM;
 
     private LocalDate dueDate;
+
+    /**
+     * Optional project this task belongs to.
+     * Represents a many-to-one association: many tasks per project.
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -154,6 +167,22 @@ public class Task {
     /** Sets the due date. */
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    /**
+     * @return the project this task belongs to, or {@code null} if none is assigned
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
+     * Assigns the task to a project or removes the association when {@code null}.
+     *
+     * @param project the project to link, or {@code null} to unlink
+     */
+    public void setProject(Project project) {
+        this.project = project;
     }
 
     /** @return the timestamp when the task was created */

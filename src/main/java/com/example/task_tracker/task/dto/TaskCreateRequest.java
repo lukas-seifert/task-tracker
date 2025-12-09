@@ -25,6 +25,12 @@ public class TaskCreateRequest {
     private TaskPriority priority;
     private LocalDate dueDate;
 
+    /**
+     * Optional ID of the project this task belongs to.
+     * Can be {@code null} when the task is not assigned to any project.
+     */
+    private Long projectId;
+
     /** @return the title of the new task */
     public String getTitle() {
         return title;
@@ -73,6 +79,20 @@ public class TaskCreateRequest {
     /** @param dueDate the due date of the new task */
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    /**
+     * @return the ID of the project to associate with this task, or {@code null}
+     */
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    /**
+     * @param projectId the project ID this task should be linked to
+     */
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
 }

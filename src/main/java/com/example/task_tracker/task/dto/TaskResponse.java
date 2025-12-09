@@ -11,8 +11,9 @@ import com.example.task_tracker.task.model.TaskStatus;
  * Used for GET operations such as retrieving a single task or listing tasks.
  * <p>
  * This record provides a read-only view of a task, including metadata such
- * as creation and update timestamps.
+ * as creation and update timestamps and its optional project association.
  */
 public record TaskResponse(Long id, String title, String description, TaskStatus status,
-    TaskPriority priority, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    TaskPriority priority, LocalDate dueDate, LocalDateTime createdAt, LocalDateTime updatedAt,
+    Long projectId, String projectName) {
 }

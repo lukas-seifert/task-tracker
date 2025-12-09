@@ -65,6 +65,7 @@ public class TaskController {
      * @param pageable pagination and sorting information
      * @param status optional filter for task status
      * @param priority optional filter for task priority
+     * @param projectId optional filter for tasks belonging to a specific project
      * @return a {@link Page} of matching task responses
      */
     @GetMapping
@@ -72,9 +73,10 @@ public class TaskController {
         @PageableDefault(
             size = 10, sort = "createdAt", direction = Sort.Direction.ASC) Pageable pageable,
         @RequestParam(required = false) TaskStatus status,
-        @RequestParam(required = false) TaskPriority priority)
+        @RequestParam(required = false) TaskPriority priority,
+        @RequestParam(required = false) Long projectId)
     {
-        return taskService.getTasks(pageable, status, priority);
+        return taskService.getTasks(pageable, status, priority, projectId);
     }
 
     /**

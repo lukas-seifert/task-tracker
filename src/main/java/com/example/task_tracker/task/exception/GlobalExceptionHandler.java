@@ -3,6 +3,7 @@ package com.example.task_tracker.task.exception;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.task_tracker.project.exception.ProjectNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,22 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(TaskNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleTaskNotFound(
         TaskNotFoundException ex, HttpServletRequest request)
+    {
+        ErrorResponse body = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    /**
+     * Handles cases where a requested project cannot be found.
+     *
+     * @param ex the thrown {@link ProjectNotFoundException}
+     * @param request the originating HTTP request
+     * @return a 404 Not Found error response
+     */
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleProjectNotFound(
+        ProjectNotFoundException ex, HttpServletRequest request)
     {
         ErrorResponse body = new ErrorResponse(
             HttpStatus.NOT_FOUND.value(), ex.getMessage(), request.getRequestURI(), null);

@@ -40,9 +40,11 @@ public interface TaskService {
      * @param pageable pagination and sorting information
      * @param status optional filter for task status (may be {@code null})
      * @param priority optional filter for task priority (may be {@code null})
+     * @param projectId optional filter for tasks belonging to a specific project
      * @return a page of task responses
      */
-    Page<TaskResponse> getTasks(Pageable pageable, TaskStatus status, TaskPriority priority);
+    Page<TaskResponse> getTasks(
+        Pageable pageable, TaskStatus status, TaskPriority priority, Long projectId);
 
     /**
      * Updates an existing task by its ID.

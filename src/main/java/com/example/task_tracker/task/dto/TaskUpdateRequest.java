@@ -25,6 +25,12 @@ public class TaskUpdateRequest {
     private TaskPriority priority;
     private LocalDate dueDate;
 
+    /**
+     * Optional ID of the project this task belongs to.
+     * When {@code null} the project association will be removed.
+     */
+    private Long projectId;
+
     /** @return the updated task title */
     public String getTitle() {
         return title;
@@ -73,6 +79,20 @@ public class TaskUpdateRequest {
     /** @param dueDate new due date for the task */
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    /**
+     * @return the ID of the project to associate with this task, or {@code null}
+     */
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    /**
+     * @param projectId the project ID this task should be linked to
+     */
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
 }
