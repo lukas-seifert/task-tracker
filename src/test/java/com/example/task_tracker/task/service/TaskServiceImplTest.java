@@ -69,6 +69,8 @@ class TaskServiceImplTest {
         assertThat(toSave.getTitle()).isEqualTo("Test Task");
         assertThat(response.title()).isEqualTo("Test Task");
         assertThat(response.priority()).isEqualTo(TaskPriority.HIGH);
+        assertThat(toSave.getProject()).isNull();
+        assertThat(response.projectId()).isNull();
     }
 
     @Test
@@ -78,11 +80,11 @@ class TaskServiceImplTest {
         Task task2 = new Task("T2", "D2", TaskStatus.DONE, TaskPriority.HIGH, null);
 
         Page<Task> page = new PageImpl<>(List.of(task1, task2));
-        when(taskRepository.findAll(any(Pageable.class))).thenReturn(page);
         Pageable pageable = PageRequest.of(0, 10);
+        when(taskRepository.findAll(pageable)).thenReturn(page);
 
         // when
-        Page<TaskResponse> result = taskService.getTasks(pageable, null, null);
+        Page<TaskResponse> result = taskService.getTasks(pageable, null, null, null);
 
         // then
         assertThat(result.getContent()).hasSize(2);
@@ -117,7 +119,7 @@ class TaskServiceImplTest {
     }
 
     @Test
-    void testUpdateTask() {
+    void testUpdateTaskNotFound() {
         // given
         when(taskRepository.findById(99L)).thenReturn(Optional.empty());
 
