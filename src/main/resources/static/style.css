@@ -318,7 +318,7 @@ tbody tr:hover {
 }
 
 #tasks-card .table-wrapper {
-    max-height: 520px;
+    max-height: 550px;
     overflow-y: auto;
     overflow-x: auto;
 }
@@ -399,4 +399,24 @@ tbody tr:hover {
 .project-actions {
     display: flex;
     gap: 0.25rem;
+}
+
+th .th-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+th.sortable.sorted {
+    color: var(--accent);
+}
+
+.sort-indicator {
+    font-size: 0.7rem;
+    opacity: 0.9;
 }

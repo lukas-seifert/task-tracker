@@ -5,6 +5,9 @@ let editingTaskId = null;
 let editingProjectId = null;
 let projects = [];
 
+let currentSortField = 'id';
+let currentSortDir = 'asc';
+
 /**
  * Collapses all expanded description cells back to their truncated state.
  */
@@ -17,6 +20,28 @@ function collapseAllDescriptions() {
             span.textContent = cell.dataset.short;
         }
     });
+}
+
+/**
+ * Updates the visual sort indicators (▲ / ▼) on the table headers.
+ */
+function updateSortIndicators() {
+    document
+        .querySelectorAll('#tasks-table thead th.sortable')
+        .forEach(th => {
+            const indicator = th.querySelector('.sort-indicator');
+            if (!indicator) {
+                return;
+            }
+            const key = th.dataset.sortKey;
+            if (key === currentSortField) {
+                indicator.textContent = currentSortDir === 'asc' ? '▲' : '▼';
+                th.classList.add('sorted');
+            } else {
+                indicator.textContent = '';
+                th.classList.remove('sorted');
+            }
+        });
 }
 
 /**
@@ -145,13 +170,11 @@ async function loadTasks(page = 0) {
     const statusFilter = document.getElementById('filter-status')?.value || '';
     const priorityFilter = document.getElementById('filter-priority')?.value || '';
     const projectFilter = document.getElementById('filter-project')?.value || '';
-    const sortBy = document.getElementById('sort-by')?.value || 'createdAt';
-    const sortDir = document.getElementById('sort-dir')?.value || 'desc';
 
     const params = new URLSearchParams();
     params.append('page', page.toString());
     params.append('size', '50');
-    params.append('sort', `${sortBy},${sortDir}`);
+    params.append('sort', `${currentSortField},${currentSortDir}`);
 
     if (statusFilter) {
         params.append('status', statusFilter);
@@ -240,6 +263,7 @@ async function loadTasks(page = 0) {
             await loadTasks();
         });
     });
+    updateSortIndicators();
 }
 
 function startEditTask(task) {
@@ -475,8 +499,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const statusFilter = document.getElementById('filter-status');
     const priorityFilter = document.getElementById('filter-priority');
     const projectFilter = document.getElementById('filter-project');
-    const sortBySelect = document.getElementById('sort-by');
-    const sortDirSelect = document.getElementById('sort-dir');
 
     if (statusFilter) {
         statusFilter.addEventListener('change', () => loadTasks());
@@ -487,12 +509,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (projectFilter) {
         projectFilter.addEventListener('change', () => loadTasks());
     }
-    if (sortBySelect) {
-        sortBySelect.addEventListener('change', () => loadTasks());
-    }
-    if (sortDirSelect) {
-        sortDirSelect.addEventListener('change', () => loadTasks());
-    }
+
+    document
+        .querySelectorAll('#tasks-table thead th.sortable')
+        .forEach(th => {
+            const sortKey = th.dataset.sortKey;
+            if (!sortKey) {
+                return;
+            }
+            th.addEventListener('click', () => {
+                if (currentSortField === sortKey) {
+                    currentSortDir = currentSortDir === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortField = sortKey;
+                    currentSortDir = 'asc';
+                }
+                updateSortIndicators();
+                loadTasks();
+            });
+        });
+
+    updateSortIndicators();
 
     // First load projects, then tasks
     loadProjects().then(() => loadTasks());

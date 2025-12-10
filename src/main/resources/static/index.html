@@ -128,7 +128,7 @@
                 <button id="refresh-btn" class="btn btn-secondary">Refresh</button>
             </div>
 
-            <!-- Filter & Sort Controls -->
+            <!-- Filters -->
             <div class="filters">
                 <div class="filters-group">
                     <label for="filter-status">Status</label>
@@ -157,39 +157,41 @@
                         <!-- options injected by app.js -->
                     </select>
                 </div>
-
-                <div class="filters-group">
-                    <label for="sort-by">Sort by</label>
-                    <select id="sort-by">
-                        <option value="createdAt">Created</option>
-                        <option value="title">Title</option>
-                        <option value="status">Status</option>
-                        <option value="priority">Priority</option>
-                        <option value="dueDate">Due date</option>
-                    </select>
-                </div>
-
-                <div class="filters-group">
-                    <label for="sort-dir">Direction</label>
-                    <select id="sort-dir">
-                        <option value="asc" selected>Asc</option>
-                        <option value="desc">Desc</option>
-                    </select>
-                </div>
             </div>
 
             <div class="table-wrapper">
                 <table id="tasks-table">
                     <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        <th>Priority</th>
-                        <th>Project</th>
-                        <th>Due</th>
-                        <th>Actions</th>
+                        <th data-sort-key="id" class="sortable">
+                            <span class="th-label">ID</span>
+                            <span class="sort-indicator"></span>
+                        </th>
+                        <th data-sort-key="title" class="sortable">
+                            <span class="th-label">Title</span>
+                            <span class="sort-indicator"></span>
+                        </th>
+                        <th>
+                            <span class="th-label">Description</span>
+                        </th>
+                        <th data-sort-key="status" class="sortable">
+                            <span class="th-label">Status</span>
+                            <span class="sort-indicator"></span>
+                        </th>
+                        <th data-sort-key="priority" class="sortable">
+                            <span class="th-label">Priority</span>
+                            <span class="sort-indicator"></span>
+                        </th>
+                        <th>
+                            <span class="th-label">Project</span>
+                        </th>
+                        <th data-sort-key="dueDate" class="sortable">
+                            <span class="th-label">Due</span>
+                            <span class="sort-indicator"></span>
+                        </th>
+                        <th>
+                            <span class="th-label">Actions</span>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
