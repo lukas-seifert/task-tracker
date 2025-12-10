@@ -60,10 +60,13 @@ body {
     gap: 1.5rem;
 }
 
-/* Projects | Create Task | Tasks */
+/* Create Task | Tasks | Projects */
 @media (min-width: 1000px) {
     .app-main {
-        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.2fr) minmax(0, 2.2fr);
+        grid-template-columns:
+            minmax(0, 1.5fr) /* left: task form */
+            minmax(0, 2.5fr) /* center: tasks table */
+            minmax(0, 1.6fr); /* right: projects */
         align-items: flex-start;
     }
 }
@@ -212,7 +215,7 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    min-width: 120px;
+    min-width: 140px;
 }
 
 .filters-group label {
@@ -232,6 +235,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    table-layout: auto;
 }
 
 thead {
