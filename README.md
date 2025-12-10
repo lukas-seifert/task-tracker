@@ -102,3 +102,10 @@ To verify formatting:
 ```
 
 The formatting rules are based on the Eclipse formatter profile in `config/format.xml`.
+
+## Demo data
+
+On first startup (when the database is empty), the application automatically inserts a few sample projects and tasks.
+This is intended to make exploration of the UI easier.
+Existing data is never overwritten.
+This feature can be disabled via configuration: `tasktracker.demo-data.enabled=false`
